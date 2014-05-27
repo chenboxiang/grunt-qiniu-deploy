@@ -1,4 +1,4 @@
-# grunt-qiniu-deploy
+# grunt-qiniu-deploy [![Build Status](https://travis-ci.org/chenboxiang/grunt-qiniu-deploy.svg?branch=master)](https://travis-ci.org/chenboxiang/grunt-qiniu-deploy) [![NPM version](https://badge.fury.io/js/grunt-qiniu-deploy.png)](http://badge.fury.io/js/grunt-qiniu-deploy)
 
 > 这个插件是用来将指定的静态资源部署到[qiniu](http://www.qiniu.com/)上
 

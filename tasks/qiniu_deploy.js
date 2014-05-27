@@ -40,6 +40,9 @@ module.exports = function(grunt) {
         if (!options.accessKey || !options.secretKey || !options.bucket || !options.resources) {
             grunt.fail.fatal('accessKey, secretKey, bucket and resources are all required!');
         }
+        // 替换掉domain中的bucket
+        options.domain = options.domain.replace('{bucket}', options.bucket);
+
         var resources = options.resources;
         if (!Array.isArray(resources)) {
             resources = [resources];

@@ -47,7 +47,8 @@ module.exports = function(grunt) {
         mochaTest: {
             test: {
                 options: {
-                    reporter: 'spec'
+                    reporter: 'spec',
+                    timeout: 60000
                 },
                 src: ['test/qiniu_deploy_test.js']
             }

@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         resources.forEach(function(res) {
             res.cwd = res.cwd || process.cwd();
             // 转换成绝对路径
-            if (!path.isAbsolute(res.cwd)) {
+            if (!(path.resolve(res.cwd) === res.cwd)) {
                 res.cwd = path.join(process.cwd(), res.cwd);
             }
         })

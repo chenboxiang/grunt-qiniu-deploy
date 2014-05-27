@@ -1,48 +1,50 @@
 'use strict';
 
-var grunt = require('grunt');
+var should = require('should');
+var fs = require('fs');
+var qn = require('qn');
+var config = require('./config');
 
-/*
-  ======== A Handy Little Nodeunit Reference ========
-  https://github.com/caolan/nodeunit
-
-  Test methods:
-    test.expect(numAssertions)
-    test.done()
-  Test assertions:
-    test.ok(value, [message])
-    test.equal(actual, expected, [message])
-    test.notEqual(actual, expected, [message])
-    test.deepEqual(actual, expected, [message])
-    test.notDeepEqual(actual, expected, [message])
-    test.strictEqual(actual, expected, [message])
-    test.notStrictEqual(actual, expected, [message])
-    test.throws(block, [error], [message])
-    test.doesNotThrow(block, [error], [message])
-    test.ifError(value)
-*/
-
-exports.qiniu_deploy = {
-  setUp: function(done) {
-    // setup here if necessary
-    done();
-  },
-  default_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
-
-    test.done();
-  },
-  custom_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
-
-    test.done();
-  },
+var pending = function(n, fn) {
+    return function(err) {
+        if (err) return fn(err);
+        --n || fn();
+    }
 };
+
+describe('qiniu_deploy', function() {
+    before(function () {
+        this.client = qn.create({
+            accessKey: config.accessKey,
+            secretKey: config.secretKey,
+            bucket: config.bucket,
+            domain: config.domain,
+            timeout: 60 * 1000
+        });
+    });
+    
+    it('should upload all resources to qiniu', function(done) {
+        var done = pending(2, done);
+
+        // 将上传的文件下载下来进行对比
+        this.client.download('js/grunt_qiniu_deploy_test.js', function(err, data) {
+            if (err) throw err;
+            var expected = fs.readFileSync('test/fixtures/js/grunt_qiniu_deploy_test.js', 'utf8');
+            expected.should.equal(data.toString());
+            done();
+        })
+        this.client.download('css/grunt_qiniu_deploy_test.css', function(err, data) {
+            if (err) throw err;
+            var expected = fs.readFileSync('test/fixtures/css/grunt_qiniu_deploy_test.css', 'utf8');
+            expected.should.equal(data.toString());
+            done();
+        })
+    })
+
+    after(function(done) {
+        var done = pending(2, done);
+
+        this.client.delete('js/grunt_qiniu_deploy_test.js', done);
+        this.client.delete('css/grunt_qiniu_deploy_test.css', done);
+    })
+})

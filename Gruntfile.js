@@ -8,6 +8,9 @@
 
 'use strict';
 
+var path = require('path');
+var config = require('./test/config');
+
 module.exports = function(grunt) {
 
     // Project configuration.
@@ -21,16 +24,22 @@ module.exports = function(grunt) {
 
         // Before generating any new files, remove any previously-created files.
         clean: {
-            tests: ['tmp']
+            tests: ['.tmp']
         },
 
         // Configuration to be run (and then tested).
-        seajsConfig: {
+        qiniu: {
             config: {
                 options: {
-                    dest: 'tmp/seajs_config.js'
-                },
-                src: ['test/fixtures/seajs_module.js']
+                    accessKey: config.accessKey,
+                    secretKey: config.secretKey,
+                    bucket: config.bucket,
+                    domain: config.domain,
+                    resources: [{
+                        cwd: 'test/fixtures',
+                        pattern: '**/*.*'
+                    }]
+                }
             }
         },
 
@@ -56,7 +65,7 @@ module.exports = function(grunt) {
 
     // Whenever the 'test' task is run, first clean the 'tmp' dir, then run this
     // plugin's task(s), then test the result.
-    grunt.registerTask('test', ['clean', 'seajsConfig', 'mochaTest', 'clean']);
+    grunt.registerTask('test', ['clean', 'qiniu', 'mochaTest', 'clean']);
 
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint', 'test']);

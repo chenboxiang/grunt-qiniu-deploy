@@ -1,6 +1,6 @@
 # grunt-qiniu-deploy
 
-> deploy static resources to qiniu
+> 这个插件是用来将指定的静态资源部署到[qiniu](http://www.qiniu.com/)上
 
 ## Getting Started
 This plugin requires Grunt `~0.4.4`
@@ -17,14 +17,14 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-qiniu-deploy');
 ```
 
-## The "qiniu_deploy" task
+## The "qiniu" task
 
 ### Overview
-In your project's Gruntfile, add a section named `qiniu_deploy` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `qiniu` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
-  qiniu_deploy: {
+  qiniu: {
     options: {
       // Task-specific options go here.
     },
@@ -37,53 +37,90 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.accessKey
 Type: `String`
-Default value: `',  '`
+Default: `none`
 
-A string value that is used to do something with whatever.
+qiniu密钥里的AccessKey
 
-#### options.punctuation
+#### options.secretKey
 Type: `String`
-Default value: `'.'`
+Default: `none`
 
-A string value that is used to do something else with whatever else.
+qiniu密钥里的SecretKey
+
+#### options.bucket
+Type: `String`
+Default: `none`
+
+qiniu空间名
+
+#### options.domain
+Type: `String`
+Default: `http://{bucket}.qiniudn.com`
+
+qiniu域名
+
+#### options.resources
+Type: `Object` `Array`
+Default: `none`
+
+resources中每个对象的数据结构为
+```js
+{
+ 		cwd: 'test/fixtures',
+		pattern: '**/*.*'
+}
+```
+通过[glob](https://github.com/isaacs/node-glob)模块匹配文件路径
+
+#### options.keyGen
+Type: `Function`
+Default: 
+```js
+	function(cwd, file) {
+                return file;
+            }
+```
+
+文件上传到qiniu上的存储路径(key)生成器，默认是匹配出来的文件路径（相对cwd的路径）
 
 ### Usage Examples
-
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
-```js
-grunt.initConfig({
-  qiniu_deploy: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
+可参见test, 目录结构：
 ```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  qiniu_deploy: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
+	├── Gruntfile.js
+	└── test
+    ├── config.js
+    ├── expected
+    ├── fixtures
+    │   ├── css
+    │   │   └── grunt_qiniu_deploy_test.css
+    │   └── js
+    │       └── grunt_qiniu_deploy_test.js
+    └── qiniu_deploy_test.js
 ```
+Gruntfile.js中的配置：
+```
+	qiniu: {
+            config: {
+                options: {
+                    accessKey: config.accessKey,
+                    secretKey: config.secretKey,
+                    bucket: config.bucket,
+                    domain: config.domain,
+                    resources: [{
+                        cwd: 'test/fixtures',
+                        pattern: '**/*.*'
+                    }]
+                }
+            }
+        }
+```
+这个例子中会将test/fixtures下的所有文件上传的qiniu，css上传后的qiniu key：css/grunt_qiniu_deploy_test.css，其他文件类似。
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+* 0.1.0 
+

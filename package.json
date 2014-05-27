@@ -26,12 +26,18 @@
   "scripts": {
     "test": "grunt test"
   },
+  "dependencies": {
+    "async": "0.9.0",
+    "glob": "4.0.0",
+    "qn": "0.2.2"
+  },
   "devDependencies": {
-      "grunt": "0.4.5",
-      "grunt-contrib-clean": "^0.5.0",
-      "grunt-contrib-jshint": "^0.6.0",
-      "grunt-mocha-test": "^0.10.0",
-      "mocha": "^1.18.2"
+    "grunt": "0.4.5",
+    "grunt-contrib-clean": "0.5.0",
+    "grunt-contrib-jshint": "0.6.5",
+    "grunt-mocha-test": "0.10.2",
+    "mocha": "1.19.0",
+    "should": "3.3.2"
   },
   "keywords": [
     "gruntplugin"

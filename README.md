@@ -85,6 +85,12 @@ Default:
 
 文件上传到qiniu上的存储路径(key)生成器，默认是匹配出来的文件路径（相对cwd的路径）
 
+#### options.ignoreDup
+Type: `Boolean`
+Default: `true`
+
+是否忽略重复的文件，默认会判断cdn上是否存在此文件，有则不上传
+
 ### Usage Examples
 可参见test, 目录结构：
 ```

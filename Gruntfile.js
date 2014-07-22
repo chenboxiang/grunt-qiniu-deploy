@@ -35,6 +35,8 @@ module.exports = function(grunt) {
                     secretKey: config.secretKey,
                     bucket: config.bucket,
                     domain: config.domain,
+                    // 是否忽略重复文件
+                    ignoreDup: true,
                     resources: [{
                         cwd: 'test/fixtures',
                         pattern: '**/*.*'

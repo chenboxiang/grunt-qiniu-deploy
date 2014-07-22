@@ -34,7 +34,9 @@ module.exports = function(grunt) {
              */
             keyGen: function(cwd, file) {
                 return file;
-            }
+            },
+            // 是否忽略重复文件
+            ignoreDup: true
         });
 
         if (!options.accessKey || !options.secretKey || !options.bucket || !options.resources) {
@@ -109,25 +111,29 @@ module.exports = function(grunt) {
          * @param file
          */
         function makeUploadTask(cwd, file) {
-            return function(callback) {
-                // 验证是否已经存在此文件，存在则不重复上传
-                client.stat(file, function(err, stat) {
-                    if (err || stat.error) {
-                        var absolutePath = path.join(cwd, file);
-                        var key = options.keyGen(cwd, file);
-                        grunt.log.ok('Start uploading the file [' + file + '], qiniu key is: [' + key + ']');
-                        client.uploadFile(absolutePath, {key: key}, function(err, result) {
-                            if (!err) {
-                                grunt.log.ok('The file [' + file + '] has been uploaded yet.');
-                            }
-                            callback(err, result);
-                        });
-
-                    } else {
-                        grunt.log.ok('The file [' + file + '] exists, so ignore it');
-                        callback(null);
+            function doUpload(callback) {
+                var absolutePath = path.join(cwd, file);
+                var key = options.keyGen(cwd, file);
+                grunt.log.ok('Start uploading the file [' + file + '], qiniu key is: [' + key + ']');
+                client.uploadFile(absolutePath, {key: key}, function(err, result) {
+                    if (!err) {
+                        grunt.log.ok('The file [' + file + '] has been uploaded yet.');
                     }
-                })
+                    callback(err, result);
+                });
+            }
+
+            return function(callback) {
+                    // 验证是否已经存在此文件，存在则不重复上传
+                    client.stat(file, function(err, stat) {
+                        if (err || stat.error) {
+                            doUpload(callback);
+
+                        } else {
+                            grunt.log.ok('The file [' + file + '] exists, so ignore it');
+                            callback(null);
+                        }
+                    })
             }
         }
     })

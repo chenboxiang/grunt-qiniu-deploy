@@ -1,7 +1,7 @@
 {
   "name": "grunt-qiniu-deploy",
   "description": "A grunt plugin which to deploy static resources to qiniu.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/chenboxiang/grunt-qiniu-deploy",
   "author": {
     "name": "chenboxiang",

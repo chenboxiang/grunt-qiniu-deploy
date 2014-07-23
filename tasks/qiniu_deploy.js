@@ -124,6 +124,7 @@ module.exports = function(grunt) {
             }
 
             return function(callback) {
+                if (options.ignoreDup) {
                     // 验证是否已经存在此文件，存在则不重复上传
                     client.stat(file, function(err, stat) {
                         if (err || stat.error) {
@@ -134,6 +135,10 @@ module.exports = function(grunt) {
                             callback(null);
                         }
                     })
+
+                } else {
+                    doUpload(callback)
+                }
             }
         }
     })

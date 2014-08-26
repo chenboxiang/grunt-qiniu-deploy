@@ -6,8 +6,8 @@
 'use strict';
 
 module.exports = {
-    accessKey: 'iN7NgwM31j4-BZacMjPrOQBs34UG1maYCAQmhdCV',
-    secretKey: '6QTOr2Jg1gcZEWDQXKOGZh5PziC2MCV5KsntT70j',
-    bucket: 'qtestbucket',
-    domain: 'http://qtestbucket.qiniudn.com'
-}
+    accessKey: '',
+    secretKey: '',
+    bucket: '',
+    domain: ''
+};

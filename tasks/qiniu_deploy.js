@@ -39,13 +39,13 @@ module.exports = function(grunt) {
             ignoreDup: true
         });
 
-        if (!options.accessKey || !options.secretKey || !options.bucket || !options.resources) {
-            grunt.fail.fatal('accessKey, secretKey, bucket and resources are all required!');
+        if (!options.accessKey || !options.secretKey || !options.bucket) {
+            grunt.fail.fatal('accessKey, secretKey, and bucket are all required!');
         }
         // 替换掉domain中的bucket
         options.domain = options.domain.replace('{bucket}', options.bucket);
 
-        var resources = options.resources;
+        var resources = this.data;
         if (!Array.isArray(resources)) {
             resources = [resources];
         }

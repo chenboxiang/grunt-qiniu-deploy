@@ -111,9 +111,9 @@ module.exports = function(grunt) {
          * @param file
          */
         function makeUploadTask(cwd, file) {
+            var key = options.keyGen(cwd, file);
             function doUpload(callback) {
                 var absolutePath = path.join(cwd, file);
-                var key = options.keyGen(cwd, file);
                 grunt.log.ok('Start uploading the file [' + file + '], qiniu key is: [' + key + ']');
                 client.uploadFile(absolutePath, {key: key}, function(err, result) {
                     if (!err) {
@@ -126,12 +126,12 @@ module.exports = function(grunt) {
             return function(callback) {
                 if (options.ignoreDup) {
                     // 验证是否已经存在此文件，存在则不重复上传
-                    client.stat(file, function(err, stat) {
+                    client.stat(key, function(err, stat) {
                         if (err || stat.error) {
                             doUpload(callback);
 
                         } else {
-                            grunt.log.ok('The file [' + file + '] exists, so ignore it');
+                            grunt.log.ok('The key [' + key + '] exists, so ignore it');
                             callback(null);
                         }
                     })
